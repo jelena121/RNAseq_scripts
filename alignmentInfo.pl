@@ -14,6 +14,7 @@ foreach (@output) {
 	}
 }
 
+say "Sample\tTotal reads\tMapped reads\tPerc mapped\tNon unique\tPerc non unique";
 
 foreach my $directory (@dirs) {
 	open FILE, "$directory/align_summary.txt";
@@ -28,11 +29,19 @@ foreach my $directory (@dirs) {
 		
 	while (my $line = <FILE>) {
 		chomp $line;
-		if ($line =~ /Input.+(\d+)/) {
+		if ($line =~ /Input.+?(\d+)/g) {
 			$input = $1;	
 		}	
+		if ($line =~ /Mapped.+?(\d+).+?(\d*\.\d\%)/g) {
+			$mapped = $1;	
+			$perc_mapped = $2;
+		}
+		if ($line =~ /of these.+?(\d+).+?(\d*\.\d\%)/g) {
+			$non_unique = $1;	
+			$perc_non_unique = $2;
+		}
 	}
 	close FILE;
-	say "$name\t$input";
+	say "$name\t$input\t$mapped\t$perc_mapped\t$non_unique\t$perc_non_unique";
 
 }
