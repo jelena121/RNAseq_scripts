@@ -1,13 +1,11 @@
-
-
 #rename files
 #requires the file naming_scheme.txt as input
 # 1st column = old name
 # 2nd column = desired new name
-#perl /home/ja313/software/scripts/renamefiles.pl
+#perl ~/software/scripts/renamefiles.pl
 
 # initial QC and number of read counts
-# PATH=$PATH\:/home/ja313/software/fastqc ; export PATH
+# PATH=$PATH\:~/software/fastqc ; export PATH
 # fastqc raw_data/*
 # mkdir raw_data_qc
 # mv raw_data/*fastqc* raw_data_qc
@@ -19,7 +17,7 @@
 # popd 
 # mv raw_data_qc/readcount_table_raw_data.txt .
 
-# standard part of the pipeline
+# Tophat alignment
 # for file in raw_data/*.fq.gz; do
 # 	echo $(date)
 # 	echo $file
