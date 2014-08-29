@@ -30,33 +30,8 @@
 # done
 # rm temp
 
-#mkdir adapters_intact
-#mv *_thout adapters_intact
+#perl alignmentInfo.pl > tophat_alignment_summary.txt
 
-#investigation into the effect of adapters
-#mkdir trimmed_data
-# for file in raw_data/*.fq.gz; do
-# 	echo $(date)
-# 	echo $file
-# 	echo $file > temp2
-# 	sample=$(cut -d . -f 3 temp2)
-# 	echo $sample
-# 	
-# 	cutadapt -O 3 -b ACACTCTTTCCCTACACGACGCTCTTCCGATCT $file -q 20 -m 5 > trimmed_data/${sample}_trimmed.fq &
-# done
-# rm temp2
-
-for file in trimmed_data/*.fq; do
-	echo $(date)
-	echo $file
-	echo $file > temp3
-	#this doesn't work anymore because the file names are different
-	sample=$(cut -d . -f 3 temp3)
-	echo $sample
-	tophat -p 12 -o ${sample}_trimmed_thout -G ~/genomes/Homo_sapiens/Ensembl/GRCh38/Annotation/rel_76/Homo_sapiens.GRCh38.76.withchr.gtf -m 2 /home/ja313/genomes/Homo_sapiens/Ensembl/GRCh38/Sequence/Bowtie2Index/hg38_genome $file	
-
-done
-rm temp3
 
 
 # for condition in do8155_Nsun2kd_144h do8155_control_144h do8156_Nsun2kd_72h do8156_control_72h; do
