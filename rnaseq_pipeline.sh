@@ -47,50 +47,44 @@ for file in raw_data/*.fq*; do
 	sample=$(cut -d . -f 3 temp)
 	echo $sample
 
-	# make a sam file and extract unique hits
-	echo "Creating ${sample} sam file"
-	samtools view -h ${sample}_thout/accepted_hits.bam > sam_files/${sample}_accepted.sam
-	echo "Sam file created"
-	echo $(date)
-
-	echo "Extracting ${sample} unique hits"
-	egrep '(NH:i:1)|(^@)' sam_files/${sample}_accepted.sam > sam_files/${sample}_unique.sam
-	echo "Unique hits extracted"
-	echo $(date)
-
-	echo "Turning ${sample} unique hits to bam file"
-	samtools view -S -b sam_files/${sample}_unique.sam > bam_files/${sample}_unique.bam
-	echo "Bam file created"
-	echo $(date)
+# make a sam file and extract unique hits
+# 	echo "Creating ${sample} sam file"
+# 	samtools view -h ${sample}_thout/accepted_hits.bam > sam_files/${sample}_accepted.sam
+# 	echo "Sam file created"
+# 	echo $(date)
+# 
+# 	echo "Extracting ${sample} unique hits"
+# 	egrep '(NH:i:1)|(^@)' sam_files/${sample}_accepted.sam > sam_files/${sample}_unique.sam
+# 	echo "Unique hits extracted"
+# 	echo $(date)
+# 
+# 	echo "Turning ${sample} unique hits to bam file"
+# 	samtools view -S -b sam_files/${sample}_unique.sam > bam_files/${sample}_unique.bam
+# 	echo "Bam file created"
+# 	echo $(date)
 
 	# getting a read count per transcript
-
-	echo "Getting ${sample} read count per transcript"
-	htseq-count -i transcript_id -m intersection-nonempty sam_files/${sample}_unique.sam ~/genomes/Homo_sapiens/Ensembl/GRCh38/Annotation/rel_76/Homo_sapiens.GRCh38.76.gtf > trans_counts/${sample}_transcript_counts.txt &
-	echo "Read count per transcript done"
-	echo $(date)
-
-	#convert bam to bedgraph
-	echo "Creating bedgraph for ${sample}"
-	genomeCoverageBed -bg -split -ibam bam_files/${sample}_unique.bam -g ~/software/UCSC/hg38_genome_UCSC.table > bedgraph/${sample}_unique.bedgraph
-	echo "Bedgraph done"
-	echo $(date)
-
-	#add chr to the chromosome name
-# 	echo "Adding chr for ${sample}"
-# 	awk '{print "chr"$0}' bedgraph/${sample}_unique.bedgraph > bedgraph/${sample}_unique_chr.bedgraph
+# 	echo "Getting ${sample} read count per transcript"
+# 	htseq-count -i transcript_id -m intersection-nonempty sam_files/${sample}_unique.sam ~/genomes/Homo_sapiens/Ensembl/GRCh38/Annotation/rel_76/Homo_sapiens.GRCh38.76.withchr.gtf > trans_counts/${sample}_transcript_counts.txt &
+# 	echo "Read count per transcript done"
+# 	echo $(date)
+# 
+# 	#convert bam to bedgraph
+# 	echo "Creating bedgraph for ${sample}"
+# 	genomeCoverageBed -bg -split -ibam bam_files/${sample}_unique.bam -g ~/software/UCSC/hg38_genome_UCSC.table > bedgraph/${sample}_unique.bedgraph
+# 	echo "Bedgraph done"
 # 	echo $(date)
 
 	echo "Replacing MT for ${sample}"
-	# replace 'MT' chromosome to correct UCSC term 'chrM'
-	sed -e "s/chrMT/chrM/ig" bedgraph/${sample}_unique_chr.bedgraph > /tmp/tempfile.tmp
-	mv /tmp/tempfile.tmp bedgraph/${sample}_unique_chr.bedgraph
+	# replace 'MT' chromosome to the UCSC term 'chrM' for track upload
+	sed -e "s/chrMT/chrM/ig" bedgraph/${sample}_unique.bedgraph > /tmp/tempfile.tmp
+	mv /tmp/tempfile.tmp bedgraph/${sample}_unique.bedgraph
 	echo "Renaming done"
 	echo $(date)
 
 	#convert bedgraph to bigwig
 	echo "Converting bedgraph to bigwig for ${sample}"
-	~/software/UCSC/bedGraphToBigWig bedgraph/${sample}_unique_chr.bedgraph ~/software/UCSC/hg38_genome_UCSC.table bigwig/${sample}_unique_chr.bw
+	~/software/UCSC/bedGraphToBigWig bedgraph/${sample}_unique.bedgraph ~/software/UCSC/hg38_genome_UCSC.table bigwig/${sample}_unique.bw
 	echo "BigWig conversion done"
 	echo $(date)
 done

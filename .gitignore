@@ -7,3 +7,4 @@ tophat_alignment_summary.txt
 bedgraph/
 bigwig/
 transcounts/
+trans_counts/
