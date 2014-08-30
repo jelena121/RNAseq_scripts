@@ -3,3 +3,7 @@
 *log*
 *temp*
 tophat_alignment_summary.txt
+*files*
+bedgraph/
+bigwig/
+transcounts/
