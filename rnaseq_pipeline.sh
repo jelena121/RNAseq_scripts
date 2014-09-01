@@ -63,6 +63,9 @@ for file in raw_data/*.fq*; do
 # 	echo "Bam file created"
 # 	echo $(date)
 
+#	echo "Making a bam index for viewing"
+#	samtools index bam_files/${sample}_unique.bam bam_files/${sample}_unique.bai
+
 	# getting a read count per transcript
 # 	echo "Getting ${sample} read count per transcript"
 # 	htseq-count -i transcript_id -m intersection-nonempty sam_files/${sample}_unique.sam ~/genomes/Homo_sapiens/Ensembl/GRCh38/Annotation/rel_76/Homo_sapiens.GRCh38.76.withchr.gtf > trans_counts/${sample}_transcript_counts.txt &
