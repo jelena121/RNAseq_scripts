@@ -8,3 +8,5 @@ bedgraph/
 bigwig/
 transcounts/
 trans_counts/
+make_bam_index.sh
+trans_counts*
