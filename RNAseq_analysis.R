@@ -21,7 +21,7 @@ getDEresults <- function(sample, control, annot) {
 	dev.off();
 
 	# diagnostic p-value histogram plot
-	pdf(file=paste(control, "_vs_", sample, "_pvalplot.pdf", sep=""));
+	pdf(file=paste("results/", control, "_vs_", sample, "_pvalplot.pdf", sep=""));
 	hist(res$pval, breaks=100, col="skyblue", border="slateblue", main="");
 	dev.off();
 
@@ -49,9 +49,62 @@ getDEresults <- function(sample, control, annot) {
 	 resFiltered[,c(2:ncol(resFiltered))])  
 	
 	# writes out final filtered results
-	write.table(resFiltered, file=paste(control, "_vs_", sample, "_FDR5_filtered.res",
-	 sep=""), sep="\t", row.names=TRUE, col.names=NA)
+	write.table(resFiltered, file=paste("results/", control, 
+	"_vs_", sample, "_FDR5_filtered.res", sep=""), sep="\t", 
+	row.names=TRUE, col.names=NA)
 	
 	# returns filtered results to workspace
 	return(resFiltered)
 }
+
+
+# reading in data - counts table including gene annotations
+data <- read.table("RNAseq_trans_counts_table_annotated.txt", header=T, 
+					row.names=1, sep="\t")
+counts <- data[,c(6,8:12,5,7,4,15:19,13,14)] # reordering columns
+annot <- annot[,1:3]
+
+# create results folder
+mainDir <- "~"
+subDir <- "results"
+dir.create(file.path(mainDir, subDir), showWarnings = FALSE)
+
+# experimental conditions
+conds <- c(rep("WT", 4), rep("mother", 4), rep("AF1", 4), rep("AF2", 4))
+
+#converts missing data into zeros
+for (i in 1:ncol(counts)) {
+  counts[is.na(counts[,i]),i] <- 0
+}
+
+# experiment metadata table
+ribosomalDesign = data.frame (
+  rownames =colnames(counts),
+  condition = conds,
+  libType = c(rep("single-end", 16)) )
+
+# creates a DEseq count dataset object
+# then calculates size factors and prints normalized data
+
+cds <- newCountDataSet( counts, conds )
+cds <- estimateSizeFactors( cds )
+
+factors <- sizeFactors( cds )
+write.table(factors, file="results/size_factors.txt", sep="\t")
+
+nCounts <- counts(cds, normalized=TRUE)
+write.table(nCounts, file="results/normalized_counts.txt", sep="\t")
+
+# estimates dispersions and makes diagnostic plot
+cds <- estimateDispersions( cds )
+str(fitInfo(cds))
+
+pdf(file="results/Dispersion.pdf");
+plotDispEsts(cds)
+dev.off();
+
+# calculates results, prints them out as files, and makes a data frame of results
+resM <- getDEresults("mother", "WT", annot) #control has to go second
+resAF1 <- getDEresults("AF1", "WT", annot)
+resAF2<- getDEresults("AF2", "WT", annot)
+
