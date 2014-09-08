@@ -10,3 +10,4 @@ transcounts/
 trans_counts/
 make_bam_index.sh
 trans_counts*
+RNAseq_trans_counts_table_annotated.txt
