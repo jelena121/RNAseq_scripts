@@ -108,3 +108,88 @@ resM <- getDEresults("mother", "WT", annot) #control has to go second
 resAF1 <- getDEresults("AF1", "WT", annot)
 resAF2<- getDEresults("AF2", "WT", annot)
 
+
+##
+#
+#
+#
+## Creating additional data diagnostic plots
+
+# pretty scatterplot function
+# stolen from Brennecke et al (2013) supp materials
+# http://www.nature.com/nmeth/journal/v10/n11/extref/nmeth.2645-S2.pdf
+
+geneScatterplot <- function( x, y, xlab, ylab, col ) {
+  plot( NULL, xlim=c( -.1, 6.2 ), ylim=c( -1, 6.2 ), 
+        xaxt="n", yaxt="n", xaxs="i", yaxs="i", asp=1,
+        xlab=xlab, ylab=ylab )
+  abline( a=-1, b=1, col = "lightgray", lwd=2 )
+  abline( a=0, b=1, col = "lightgray", lwd=2 )
+  abline( a=1, b=1, col = "lightgray", lwd=2 )
+  abline( h=c(0,2,4,6), v=c(0,2,4,6), col = "lightgray", lwd=2 )
+  points( 
+    ifelse( x > 0, log10(x), -.7 ),
+    ifelse( y > 0, log10(y), -.7 ),
+    pch=19, cex=.2, col = col )
+  axis( 1, c( -.7, 0:6 ), 
+        c( "0", "1", "10", "100", expression(10^3), expression(10^4),
+           expression(10^5), expression(10^6) ) )
+  axis( 2, c( -.7, 0:6 ), 
+        c( "0", "1", "10", "100", expression(10^3), expression(10^4),
+           expression(10^5), expression(10^6) ), las=2 )
+  axis( 1, -.35, "//", tick=FALSE, line=-.7 )
+  axis( 2, -.35, "\\\\", tick=FALSE, line=-.7 )
+}
+
+# set colours for each sample
+colWT <- rgb(78,185,75, maxColorValue=255)
+colM <- rgb(190,91,165, maxColorValue=255)
+colAF1 <- rgb(148,125,186, maxColorValue=255)
+colAF2 <- rgb(71,93,172, maxColorValue=255)
+
+# correlation within each experimental condition
+png("correlation_log_withincond.png", width = 1000, height = 1000)
+par(mfrow=c(2,2))
+geneScatterplot( nCounts[,1], nCounts[,3], 
+                 "normalized read count, WT1", "normalized read count, WT3",
+                 colWT )
+geneScatterplot( nCounts[,5], nCounts[,7], 
+                 "normalized read count, M1", "normalized read count, M3",
+                 colM )
+geneScatterplot( nCounts[,9], nCounts[,11], 
+                 "normalized read count, AF1_a", "normalized read count, AF1_c",
+                 colAF1 )
+geneScatterplot( nCounts[,13], nCounts[,15], 
+                 "normalized read count, AF2_a", "normalized read count, AF2_c",
+                 colAF2 )
+dev.off()
+
+# correlation between experimental conditions
+par(mfrow=c(3,3))
+png("correlation_log_withincond.png", width = 2000, height = 2000)
+geneScatterplot( nCounts[,1], nCounts[,5], "normalized read count, WT1", 
+				"normalized read count, M1", colWT )
+geneScatterplot( nCounts[,1], nCounts[,5], 
+                 "normalized read count, WT1", "normalized read count, M1",
+                 colWT )
+geneScatterplot( nCounts[,1], nCounts[,9], 
+                 "normalized read count, WT1", "normalized read count, AF1_a",
+                 colWT )
+geneScatterplot( nCounts[,1], nCounts[,13], 
+                 "normalized read count, WT1", "normalized read count, AF2_a",
+                 colWT )
+plot()
+geneScatterplot( nCounts[,5], nCounts[,9], 
+                 "normalized read count, M1", "normalized read count, AF1_a",
+                 colM )
+geneScatterplot( nCounts[,5], nCounts[,13], 
+                 "normalized read count, M1", "normalized read count, AF2_a",
+                 colM )
+plot()
+plot()
+geneScatterplot( nCounts[,9], nCounts[,13], 
+                 "normalized read count, AF1_a", "normalized read count, AF2_a",
+                 colAF1 )
+
+dev.off()
+
