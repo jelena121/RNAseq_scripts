@@ -59,10 +59,10 @@ for file in raw_data/*.fq*; do
 	echo "Making a bam index for viewing"
 	samtools index bam_files/${sample}_unique.bam bam_files/${sample}_unique.bai
 
-	# getting a read count per transcript
-	echo "Getting ${sample} read count per transcript"
-	htseq-count -i transcript_id -m intersection-nonempty sam_files/${sample}_unique.sam ~/genomes/Homo_sapiens/Ensembl/GRCh38/Annotation/rel_76/Homo_sapiens.GRCh38.76.withchr.gtf > trans_counts/${sample}_transcript_counts.txt &
-	echo "Read count per transcript done"
+	# getting a read count per gene
+	echo "Getting ${sample} read count per gene"
+	htseq-count -i gene_id -m union sam_files/${sample}_unique.sam ~/genomes/Homo_sapiens/Ensembl/GRCh38/Annotation/rel_76/Homo_sapiens.GRCh38.76.withchr.gtf > gene_counts/${sample}_gene_counts.txt &
+	echo "Read count per gene done"
 	echo $(date)
 
 	#convert bam to bedgraph
