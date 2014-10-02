@@ -9,13 +9,6 @@ PATH=$PATH\:~/software/fastqc ; export PATH
 fastqc raw_data/*
 mkdir raw_data_qc
 mv raw_data/*fastqc* raw_data_qc
-pushd raw_data_qc/
-for file in *.zip; do
-	unzip file
-done
-perl ~/software/scripts/getReadCountQC.pl > readcount_table_raw_data.txt
-popd 
-mv raw_data_qc/readcount_table_raw_data.txt .
 
 # Tophat alignment
 for file in raw_data/*.fq.gz; do
