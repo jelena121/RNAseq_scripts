@@ -4,7 +4,7 @@ use warnings;
 
 my %files;
 
-my $htdir = "RNAseq_P0014";
+my $htdir = "RNAseq_P0013";
 
 open FILE, $ARGV[0];
 while (my $line = <FILE>) {
@@ -26,21 +26,22 @@ if (-e "colour_scheme.txt") {
 	close FILE;
 
 	foreach my $bwname (sort keys %files) {
-		if ($bwname =~/(.*)\_unique\.bw/) {
-			
+	
+	
+		if ($bwname =~/(.*)\_unique\.bw/) {			
 			my $name = $1;
-			my $sample = substr($name, 0, -2);
+			my $sample = substr($name, 0, -1);
 			
-			say "track type=bigWig name=\"$name\" bigDataUrl=http://jelena.results.cscr.cam.ac.uk/$htdir/$bwname alwaysZero=On windowingFunction=maximum visibility=full  color=$col{$sample}\n"
+			say "track type=bigWig name=\"$name norm\" bigDataUrl=http://jelena.results.cscr.cam.ac.uk/$htdir/$bwname alwaysZero=On windowingFunction=maximum visibility=full  color=$col{$sample}\n"
+		}
+		if ($bwname =~/(.*)\_norm.+\.bw/) {
+			my $name = $1;
+			my $sample = substr($name, 0, -1);
+			say "track type=bigWig name=\"$name\" bigDataUrl=http://jelena.results.cscr.cam.ac.uk/$htdir/$bwname alwaysZero=On windowingFunction=maximum visibility=full color=$col{$sample}\n"
 		}
 	}
-
 
 } else {
-	foreach my $bwname (sort keys %files) {
-		if ($bwname =~/(.*)\_unique\.bw/) {
-			my $name = $1;
-			say "track type=bigWig name=\"$name\" bigDataUrl=http://jelena.results.cscr.cam.ac.uk/$htdir/$bwname alwaysZero=On windowingFunction=maximum visibility=full\n"
-		}
-	}
+	warn "colour scheme missing\n";
+
 }

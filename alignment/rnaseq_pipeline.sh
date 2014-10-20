@@ -17,7 +17,7 @@ for file in raw_data/*.fq.gz; do
 	echo $file > temp
 	sample=$(cut -d . -f 3 temp)
 	echo $sample
-	
+	 
 	tophat -p 12 -o ${sample}_thout -G ~/genomes/Homo_sapiens/Ensembl/GRCh38/Annotation/rel_76/Homo_sapiens.GRCh38.76.withchr.gtf -m 2 /home/ja313/genomes/Homo_sapiens/Ensembl/GRCh38/Sequence/Bowtie2Index/hg38_genome $file
 	
 done
