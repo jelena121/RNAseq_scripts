@@ -13,6 +13,7 @@ sub extractQuote {
 
 my %scaling;
 
+#read in DEseq size factors
 open FILE, "size_factors.txt";
 while (my $line = <FILE>) {
 	chomp $line;
