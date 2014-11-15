@@ -47,7 +47,7 @@ for file in raw_data/*.fq*; do
 	echo $(date)
 
 	echo "Extracting ${sample} unique hits"
-	egrep '(NH:i:1)|(^@)' sam_files/${sample}_accepted.sam > sam_files/${sample}_unique.sam
+	perl ~/software/scripts/unique_flag_search.pl sam_files/${sample}_accepted.sam > sam_files/${sample}_unique.sam
 	echo "Unique hits extracted"
 	echo $(date)
 
