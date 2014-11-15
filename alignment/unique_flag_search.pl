@@ -5,7 +5,7 @@ use warnings;
 open FILE, $ARGV[0];
 while (my $line = <FILE>) {
 	chomp $line;
-	if ($line =~ /^@/ || $line =~ /NH:i:1\s/ ) {
+	if ($line =~ /^@/ || $line =~ /NH:i:1\s/ || $line =~ /NH:i:1$/) {
 		say $line;
 	}
 }

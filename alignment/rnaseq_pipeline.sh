@@ -73,8 +73,8 @@ for file in raw_data/*.fq*; do
 
 	echo "Replacing MT for ${sample}"
 	# replace 'MT' chromosome to the UCSC term 'chrM' for track upload
-	sed -e "s/chrMT/chrM/ig" bedgraph/${sample}_unique.bedgraph > /tmp/tempfile.tmp
-	mv /tmp/tempfile.tmp bedgraph/${sample}_unique.bedgraph
+	sed -e "s/chrMT/chrM/ig" bedgraph/${sample}_unique.bedgraph > tempfile.tmp
+	mv tempfile.tmp bedgraph/${sample}_unique.bedgraph
 	echo "Renaming done"
 	echo $(date)
  
